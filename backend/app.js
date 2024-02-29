@@ -5,6 +5,7 @@ const mongodbErrorHandler = require('mongoose-mongodb-errors');
 const app = express();
 
 const userRoutes = require('./routes/user');
+const sauceRoutes = require('./routes/sauce');
 
 app.use(express.json());
 
@@ -30,5 +31,6 @@ app.use((req, res) => {
 });
 
 app.use('/api/auth', userRoutes);
+app.use('/api/sauce', sauceRoutes);
 
 module.exports = app;

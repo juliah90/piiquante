@@ -1,6 +1,6 @@
 const Sauce = require('../models/sauce');
 
-exports.createThing = (req, res, next) => {
+exports.createSauce = (req, res, next) => {
   const sauce = new Sauce({
     name: req.body.name,
     manufacturer: req.body.manufacturer,
