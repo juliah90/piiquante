@@ -4,6 +4,8 @@ const mongodbErrorHandler = require('mongoose-mongodb-errors');
 
 const app = express();
 
+const userRoutes = require('./routes/user');
+
 app.use(express.json());
 
 mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/?retryWrites=true&w=majority`)
@@ -26,5 +28,7 @@ app.use((req, res, next) => {
 app.use((req, res) => {
    res.json({ message: 'Your request was successful!' });
 });
+
+app.use('/api/auth', userRoutes);
 
 module.exports = app;
