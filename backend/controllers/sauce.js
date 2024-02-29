@@ -1,7 +1,7 @@
-const sauce = require('../models/sauce');
+const Sauce = require('../models/sauce');
 
 exports.createThing = (req, res, next) => {
-  const thing = new Thing({
+  const sauce = new Sauce({
     name: req.body.name,
     manufacturer: req.body.manufacturer,
     description: req.body.description,
@@ -9,10 +9,10 @@ exports.createThing = (req, res, next) => {
     mainPepperIngredient: req.body.mainPepperIngredient,
     heat: req.body.heat
   });
-  thing.save().then(
+  sauce.save().then(
     () => {
       res.status(201).json({
-        message: 'Post saved successfully!'
+        message: 'Sauce saved successfully!'
       });
     }
   ).catch(

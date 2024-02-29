@@ -8,3 +8,5 @@ const sauceSchema = mongoose.Schema({
     mainPepperIngredient: { type: String, required: true },
     heat: { type: Number, required: true }
 });
+
+module.exports = mongoose.model('Sauce', sauceSchema);

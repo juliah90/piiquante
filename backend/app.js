@@ -1,5 +1,5 @@
 const express = require('express');
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 const mongodbErrorHandler = require('mongoose-mongodb-errors');
 
 const app = express();
