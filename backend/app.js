@@ -26,10 +26,6 @@ app.use((req, res, next) => {
    next();
 });
 
-app.use((req, res) => {
-   res.json({ message: 'Your request was successful!' });
-});
-
 app.use('/api/auth', userRoutes);
 app.use('/api/sauce', sauceRoutes);
 
