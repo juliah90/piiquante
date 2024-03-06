@@ -1,13 +1,16 @@
 const Sauce = require('../models/sauce');
 
 exports.createSauce = (req, res, next) => {
+  // TODO add remaining required fields - for usersliked/disliked
+  req.body.sauce = JSON.parse(req.body.sauce);
+  const url = req.protocol + '://' + req.get('host');
   const sauce = new Sauce({
-    name: req.body.name,
-    manufacturer: req.body.manufacturer,
-    description: req.body.description,
-    imageUrl: req.body.imageUrl,
-    mainPepperIngredient: req.body.mainPepperIngredient,
-    heat: req.body.heat
+    name: req.body.sauce.name,
+    manufacturer: req.body.sauce.manufacturer,
+    description: req.body.sauce.description,
+    mainPepper: req.body.sauce.mainPepper,
+    imageUrl: url + '/images/' + req.body.sauce.filename,
+    heat: req.body.sauce.heat
   });
   sauce.save().then(
     () => {
@@ -17,6 +20,7 @@ exports.createSauce = (req, res, next) => {
     }
   ).catch(
     (error) => {
+      console.log(error);
       res.status(400).json({
         error: 'Failed to add sauce'
       });
@@ -52,15 +56,29 @@ exports.getOneSauce = (req, res, next) => {
   );
 };
 exports.modifySauce = (req, res, next) => {
-  const sauce = new Sauce({
-    _id: req.params.id,
+  const sauce = new Sauce({_id: req.params.id});
+  if(req.file){
+    const url = req.protocol + '://' + req.get('host');
+    req.body.sauce = JSON.parse(req.body.sauce);
+    sauce = {
+      _id: req.params.id,
+    name: req.body.sauce.name,
+    manufacturer: req.body.sauce.manufacturer,
+    description: req.body.sauce.description,
+    mainPepper: req.body.sauce.mainPepper,
+    imageUrl: url + '/images/' + req.body.sauce.filename,
+    heat: req.body.sauce.heat
+    };
+  }else{
+    sauce = {
     name: req.body.name,
     manufacturer: req.body.manufacturer,
     description: req.body.description,
     imageUrl: req.body.imageUrl,
     mainPepperIngredient: req.body.mainPepperIngredient,
     heat: req.body.heat
-  });
+  };
+}
   Sauce.updateOne({_id: req.params.id}, sauce).then(
     () => {
       res.status(201).json({
