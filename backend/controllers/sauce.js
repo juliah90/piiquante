@@ -1,7 +1,6 @@
 const Sauce = require('../models/sauce');
 
 exports.createSauce = (req, res, next) => {
-  // TODO add remaining required fields - for usersliked/disliked
   req.body.sauce = JSON.parse(req.body.sauce);
   const url = req.protocol + '://' + req.get('host');
   const sauce = new Sauce({
@@ -10,7 +9,9 @@ exports.createSauce = (req, res, next) => {
     description: req.body.sauce.description,
     mainPepper: req.body.sauce.mainPepper,
     imageUrl: url + '/images/' + req.body.sauce.filename,
-    heat: req.body.sauce.heat
+    heat: req.body.sauce.heat,
+    usersLiked: req.body.sauce.usersLiked,
+    usersDisliked: req.body.sauce.usersDisliked
   });
   sauce.save().then(
     () => {
@@ -67,7 +68,9 @@ exports.modifySauce = (req, res, next) => {
     description: req.body.sauce.description,
     mainPepper: req.body.sauce.mainPepper,
     imageUrl: url + '/images/' + req.body.sauce.filename,
-    heat: req.body.sauce.heat
+    heat: req.body.sauce.heat,
+    usersLiked: req.body.sauce.usersLiked,
+    usersDisliked: req.body.sauce.usersDisliked
     };
   }else{
     sauce = {
@@ -76,7 +79,9 @@ exports.modifySauce = (req, res, next) => {
     description: req.body.description,
     imageUrl: req.body.imageUrl,
     mainPepperIngredient: req.body.mainPepperIngredient,
-    heat: req.body.heat
+    heat: req.body.heat,
+    usersLiked: req.body.sauce.usersLiked,
+    usersDisliked: req.body.sauce.usersDisliked
   };
 }
   Sauce.updateOne({_id: req.params.id}, sauce).then(
