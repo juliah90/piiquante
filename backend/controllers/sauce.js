@@ -1,17 +1,27 @@
 const Sauce = require('../models/sauce');
+const fs = require('fs');
 
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 exports.createSauce = (req, res, next) => {
   req.body.sauce = JSON.parse(req.body.sauce);
   const url = req.protocol + '://' + req.get('host');
   const sauce = new Sauce({
+    userId: req.body.sauce.userId,
     name: req.body.sauce.name,
     manufacturer: req.body.sauce.manufacturer,
     description: req.body.sauce.description,
     mainPepper: req.body.sauce.mainPepper,
-    imageUrl: url + '/images/' + req.body.sauce.filename,
+    imageUrl: url + '/images/' + req.file.filename,
     heat: req.body.sauce.heat,
-    usersLiked: req.body.sauce.usersLiked,
-    usersDisliked: req.body.sauce.usersDisliked
+    likes: 0,
+    dislikes: 0,
+    usersLiked: [],
+    usersDisliked: []
   });
   sauce.save().then(
     () => {
@@ -57,18 +67,18 @@ exports.getOneSauce = (req, res, next) => {
   );
 };
 exports.modifySauce = (req, res, next) => {
-  let sauce = new Sauce({ _id: req.params.id });
+  const sauce = new Sauce({ _id: req.params.id });
   if (req.file) {
     const url = req.protocol + '://' + req.get('host');
     req.body.sauce = JSON.parse(req.body.sauce);
-    console.log(req.body.sauce)
+    //TODO use current likes/dislkes info below
     sauce = {
       _id: req.params.id,
       name: req.body.sauce.name,
       manufacturer: req.body.sauce.manufacturer,
       description: req.body.sauce.description,
       mainPepper: req.body.sauce.mainPepper,
-      imageUrl: url + '/images/' + req.body.sauce.filename,
+      imageUrl: url + '/images/' + req.file.filename,
       heat: req.body.sauce.heat,
       likes: req.body.sauce.likes,
       dislikes: req.body.sauce.dislikes,
