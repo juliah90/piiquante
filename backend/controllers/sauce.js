@@ -74,12 +74,13 @@ exports.modifySauce = (req, res, next) => {
         return res.status(404).json({ error: 'Sauce not found' });
       }
       const { likes, dislikes, usersLiked, usersDisliked } = existingSauce;
-      let updatedSauce;
+      let updatedSauce
       if (req.file) {
         const url = req.protocol + '://' + req.get('host');
         req.body.sauce = JSON.parse(req.body.sauce);
         updatedSauce = {
           _id: req.params.id,
+          userId: req.body.sauce.userId,
           name: req.body.sauce.name,
           manufacturer: req.body.sauce.manufacturer,
           description: req.body.sauce.description,
@@ -93,6 +94,7 @@ exports.modifySauce = (req, res, next) => {
         };
       } else {
         updatedSauce = {
+          _id: req.params.id,
           userId: req.body.sauce.userId,
           name: req.body.name,
           manufacturer: req.body.manufacturer,
