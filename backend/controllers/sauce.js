@@ -100,6 +100,7 @@ exports.modifySauce = (req, res, next) => {
           manufacturer: req.body.sauce.manufacturer,
           description: req.body.sauce.description,
           mainPepper: req.body.sauce.mainPepper,
+          imageUrl: existingSauce.imageUrl,
           heat: req.body.sauce.heat,
           likes: likes,
           dislikes: dislikes,
@@ -139,3 +140,9 @@ exports.deleteSauce = (req, res, next) => {
     }
   );
 };
+
+exports.like = (req, res, next) => {
+//TODO get ahold of userId?
+//gonna need an array for like(1 is like, 0 is neutral, -1 is dislike)
+//must be connected to userId, can't like or dislike more than once
+}
