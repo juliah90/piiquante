@@ -119,11 +119,11 @@ exports.modifySauce = (req, res, next) => {
 };
 
 exports.deleteSauce = (req, res, next) => {
-  Sauce.findOne({_id: req.params.id}).then(
+  Sauce.findOne({ _id: req.params.id }).then(
     (sauce) => {
       const filename = sauce.imageUrl.split('/images/')[1];
       fs.unlink('images/' + filename, () => {
-        Sauce.deleteOne({_id: req.params.id}).then(
+        Sauce.deleteOne({ _id: req.params.id }).then(
           () => {
             res.status(200).json({
               message: 'Deleted!'
@@ -141,8 +141,35 @@ exports.deleteSauce = (req, res, next) => {
   );
 };
 
-exports.like = (req, res, next) => {
-//TODO get ahold of userId?
-//gonna need an array for like(1 is like, 0 is neutral, -1 is dislike)
-//must be connected to userId, can't like or dislike more than once
-}
+exports.like = async (req, res, next) => {
+  try {
+      const sauceId = req.params.id;
+      const userId = req.user.id;
+
+      const sauce = await Sauce.findById(sauceId);
+      if (!sauce) {
+          return res.status(404).json({ error: 'Sauce not found' });
+      }
+
+      if (sauce.usersLiked.includes(userId) || sauce.usersDisliked.includes(userId)) {
+          return res.status(400).json({ error: 'You have already liked/disliked this sauce' });
+      }
+
+      if (req.body.like === 1) {
+          sauce.likes++;
+          sauce.usersLiked.push(userId);
+      } else if (req.body.like === -1) {
+          sauce.dislikes++;
+          sauce.usersDisliked.push(userId);
+      } else if (req.body.like !== 0) {
+          return res.status(400).json({ error: 'Invalid like value' });
+      }
+
+      await sauce.save();
+
+      res.status(200).json({ message: 'Sauce liked/disliked successfully' });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+};
