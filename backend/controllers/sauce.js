@@ -95,13 +95,13 @@ exports.modifySauce = (req, res, next) => {
       } else {
         updatedSauce = {
           _id: req.params.id,
-          userId: req.body.sauce.userId,
-          name: req.body.sauce.name,
-          manufacturer: req.body.sauce.manufacturer,
-          description: req.body.sauce.description,
-          mainPepper: req.body.sauce.mainPepper,
+          userId: req.body.userId,
+          name: req.body.name,
+          manufacturer: req.body.manufacturer,
+          description: req.body.description,
+          mainPepper: req.body.mainPepper,
           imageUrl: existingSauce.imageUrl,
-          heat: req.body.sauce.heat,
+          heat: req.body.heat,
           likes: likes,
           dislikes: dislikes,
           usersLiked: usersLiked,
@@ -182,4 +182,6 @@ exports.like = (req, res, next) => {
       res.status(500).json({ error: 'Internal server error' });
     });
 };
+
+
 
