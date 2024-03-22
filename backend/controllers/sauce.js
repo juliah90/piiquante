@@ -141,35 +141,45 @@ exports.deleteSauce = (req, res, next) => {
   );
 };
 
-exports.like = async (req, res, next) => {
-  try {
-      const sauceId = req.params.id;
-      const userId = req.user.id;
+exports.like = (req, res, next) => {
+  const sauceId = req.params.id;
+  const userId = req.body.userId;
+  const likeValue = req.body.like;
 
-      const sauce = await Sauce.findById(sauceId);
+  Sauce.findOne({ _id: sauceId })
+    .then(sauce => {
       if (!sauce) {
-          return res.status(404).json({ error: 'Sauce not found' });
+        return res.status(404).json({ error: 'Sauce not found' });
       }
 
-      if (sauce.usersLiked.includes(userId) || sauce.usersDisliked.includes(userId)) {
-          return res.status(400).json({ error: 'You have already liked/disliked this sauce' });
+      if (likeValue !== 1 && likeValue !== -1 && likeValue !== 0) {
+        return res.status(400).json({ error: 'Invalid like value' });
       }
 
-      if (req.body.like === 1) {
-          sauce.likes++;
-          sauce.usersLiked.push(userId);
-      } else if (req.body.like === -1) {
-          sauce.dislikes++;
-          sauce.usersDisliked.push(userId);
-      } else if (req.body.like !== 0) {
-          return res.status(400).json({ error: 'Invalid like value' });
+      if (sauce.usersLiked.includes(userId)) {
+        sauce.likes--;
+        sauce.usersLiked = sauce.usersLiked.filter(id => id !== userId);
+      } else if (sauce.usersDisliked.includes(userId)) {
+        sauce.dislikes--;
+        sauce.usersDisliked = sauce.usersDisliked.filter(id => id !== userId);
       }
 
-      await sauce.save();
+      if (likeValue === 1) {
+        sauce.likes++;
+        sauce.usersLiked.push(userId);
+      } else if (likeValue === -1) {
+        sauce.dislikes++;
+        sauce.usersDisliked.push(userId);
+      }
 
+      return sauce.save();
+    })
+    .then(() => {
       res.status(200).json({ message: 'Sauce liked/disliked successfully' });
-  } catch (error) {
+    })
+    .catch(error => {
       console.error(error);
       res.status(500).json({ error: 'Internal server error' });
-  }
+    });
 };
+
