@@ -2,6 +2,10 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+/**
+ * 
+ * @param {*} controls user signup and prevents repeat emails
+ */
 exports.signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10).then((hash) => {
         const user = new User({
@@ -21,6 +25,10 @@ exports.signup = (req, res, next) => {
     })
 };
 
+/**
+ * 
+ * @param {*} ensures password and email are valid to help prevent account theft
+ */
 exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email }).then(
         (user) => {
@@ -38,7 +46,7 @@ exports.login = (req, res, next) => {
                     }
                     const token = jwt.sign(
                         { userId: user._id },
-                        'JULIE_LOOK_HERE_CHANGE_LATER',
+                        'PXFFo0XckZYFu0aHeEUalLinuK9t4q4A2024-03-23-011004',
                         { expiresIn: '24h' });
                     res.status(200).json({
                         userId: user._id,
