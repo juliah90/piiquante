@@ -4,7 +4,7 @@ const fs = require('fs');
 
 /**
  * 
- * @param {*} allows user to create a sauce while requiring essential data 
+ * @param {*} createSauce - allows user to create a sauce while requiring essential data 
  */
 exports.createSauce = (req, res, next) => {
   req.body.sauce = JSON.parse(req.body.sauce);
@@ -40,7 +40,7 @@ exports.createSauce = (req, res, next) => {
 
 /**
  * 
- * @param {*} returns a database of all available sauces
+ * @param {*} allSauces - returns a database of all available sauces
  */
 exports.getAllSauces = (req, res, next) => {
   Sauce.find().then(
@@ -58,7 +58,7 @@ exports.getAllSauces = (req, res, next) => {
 
 /**
  * 
- * @param {*} returns a single sauce based on it's id
+ * @param {*} oneSauce - returns a single sauce based on it's id
  */
 exports.getOneSauce = (req, res, next) => {
   Sauce.findOne({
@@ -78,7 +78,7 @@ exports.getOneSauce = (req, res, next) => {
 
 /**
  * 
- * @param {*} allows only the original creator to modify a posted sauce both with and without an image
+ * @param {*} modifySauce - allows only the original creator to modify a posted sauce both with and without an image
  */
 exports.modifySauce = (req, res, next) => {
   Sauce.findById(req.params.id)
@@ -133,7 +133,7 @@ exports.modifySauce = (req, res, next) => {
 
 /**
  * 
- * @param {*} ensures only the sauce creator can delete the sauce
+ * @param {*} deleteSauce - ensures only the sauce creator can delete the sauce
  */
 exports.deleteSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id }).then(
@@ -160,7 +160,7 @@ exports.deleteSauce = (req, res, next) => {
 
 /**
  * 
- * @param {*} records and limits users like/dislike choices
+ * @param {*} like - records and limits users like/dislike choices
  */
 exports.like = (req, res, next) => {
   const sauceId = req.params.id;
