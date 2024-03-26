@@ -8,6 +8,11 @@ const fs = require('fs');
  */
 exports.createSauce = (req, res, next) => {
   req.body.sauce = JSON.parse(req.body.sauce);
+  try {
+    validateUser(req.auth.userId, req.body.sauce.userId);
+  } catch (error) {
+    return res.status(400).json({ error: 'Failed to create sauce' });
+  }
   const url = req.protocol + '://' + req.get('host');
   const sauce = new Sauce({
     userId: req.body.sauce.userId,
@@ -91,6 +96,7 @@ exports.modifySauce = (req, res, next) => {
       if (req.file) {
         const url = req.protocol + '://' + req.get('host');
         req.body.sauce = JSON.parse(req.body.sauce);
+        validateUser(req.auth.userId, req.body.sauce.userId);
         updatedSauce = {
           _id: req.params.id,
           userId: req.body.sauce.userId,
@@ -205,4 +211,10 @@ exports.like = (req, res, next) => {
 };
 
 
+
+function validateUser(authUserId, sauceUserId) {
+  if (authUserId !== sauceUserId) {
+    throw new Error();
+  }
+}
 
